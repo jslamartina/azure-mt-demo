@@ -2,7 +2,7 @@ Companion repository for this Medium article: [DevOps: Implement CI/CD for a Mul
 
 Example use:
 ``` bash
-# In you CI step, you would run the following script
+# In your CI step, you would run the following script
 sudo bash test_flyway_with_backups.sh
 # You would output the $commit_sha variable's value and give it to the CD step to download and apply the migrations
 sudo bash apply_flyway.sh
