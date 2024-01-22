@@ -4,8 +4,7 @@ CREATE TABLE TenantTable1
     SomeData NVARCHAR(256) NOT NULL
 );
 
-INSERT INTO TenantTable1(ID,
-                         SomeData)
+INSERT INTO TenantTable1(SomeData)
 VALUES ('SomeTenantLevelData1'),
        ('SomeTenantLevelData2'),
        ('SomeTenantLevelData3'),
