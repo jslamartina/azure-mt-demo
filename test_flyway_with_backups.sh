@@ -49,7 +49,8 @@ fi
 
 # Back up all of our databases in parallel, including the Management DB, to test our Flyway Migrations on
 export TZ=UTC
-export DATE_TIME=$(date +'%FT%T')
+# PITR backup has a 5 minute SLA
+export DATE_TIME=$(date +'%FT%T' --date '-5 min')
 export DATE_TIME_TAG=$(date +'%m-%d-%Y')
 export MGMT_DB_BACKUP_NAME="${mgmt_db_name}_TestMigration_${DATE_TIME}"
 (
