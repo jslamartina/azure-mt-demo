@@ -17,8 +17,6 @@ export artifact_storage_container_name="mt-demo-artifact"
 export repo_name="azure-mt-demo"
 export repo_owner="jslamartina"
 
-git clone -b main "https://github.com/${repo_owner}/${repo_name}.git"
-cd azure-mt-demo
 export commit_sha=$(git rev-parse --short HEAD)
 if [ -z "${commit_sha}" ]; then
   echo "Commit SHA is empty. Check the logs for errors."
