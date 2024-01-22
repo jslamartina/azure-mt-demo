@@ -1,17 +1,17 @@
 # Ensure the | (pipe) operation does not cover up any underlying errors by returning the same error code as its underlying processes
 set -o pipefail
 
+export commit_sha="SET THIS TO COMMIT SHA OUTPUT FROM TEST"
+
 export subscription_id="00000000-0000-0000-0000-000000000000"
 export rg_name="rg-mt-demo"
 export server_name="sql-server-mt-demo"
 export pool_name="pool-mt-demo"
-export commit_sha="SET THIS TO COMMIT SHA OUTPUT FROM TEST"
 export mgmt_db_name="mgmt-db-mt-demo"
 export mgmt_db_script_path="mgmt-db"
 export tenant_db_script_path="tenant-db"
-export storage_account_name="artifactstoragemtdemo"
+export artifact_storage_account_name="artifactstoragemtdemo"
 export artifact_storage_container_name="mt-demo-artifact"
-export repo_name="azure-mt-demo"
 
 # Make sure you are in the flyway folder when running this script
 cd flyway
@@ -23,9 +23,9 @@ az account set \
 
 echo -e "\nDownloading flyway artifact..."
 az storage blob download \
-    --account-name $ \
+    --account-name $artifact_storage_account_name \
     -c $artifact_storage_container_name \
-    -n "${repo_name}.${commit_sha}.flyway.artifact.zip" \
+    -n "${commit_sha}.flyway.artifact.zip" \
     -f flyway_artifact.zip \
     --output table
 
@@ -67,3 +67,4 @@ for db in $TENANT_DBS; do
     -jdbcProperties.accessToken=$SQL_ACCESS_TOKEN \
     migrate
 )
+done
