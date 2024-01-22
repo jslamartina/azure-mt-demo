@@ -7,29 +7,28 @@ terraform {
   }
 }
 
+provider "azurerm" {
+  features {}
+}
+
 locals {
-  tenant_databases = toset([
-    {
-      db_name        = "Tenant_A"
-      db_max_size_gb = 2
-    },
-    {
-      db_name        = "Tenant_B"
-      db_max_size_gb = 2
-    },
-    {
-      db_name        = "Tenant_C"
-      db_max_size_gb = 2
-    },
-    {
-      db_name        = "Tenant_D"
-      db_max_size_gb = 2
-    },
-    {
-      db_name        = "Tenant_E"
+  tenant_databases = {
+    "Tenant_A" = {
       db_max_size_gb = 2
     }
-  ])
+    "Tenant_B" = {
+      db_max_size_gb = 2
+    }
+    "Tenant_C" = {
+      db_max_size_gb = 2
+    }
+    "Tenant_D" = {
+      db_max_size_gb = 2
+    },
+    "Tenant_E" = {
+      db_max_size_gb = 2
+    }
+  }
   location = "East US 2"
   # Your Entra login and Object ID
   login_username = "myusername@mytenant.com"
@@ -50,8 +49,9 @@ resource "azurerm_mssql_server" "sql_server_mt_demo" {
   public_network_access_enabled  = true
 
   azuread_administrator {
-    login_username  = local.login_username
-    object_id       = local.login_object_id
+    login_username              = local.login_username
+    object_id                   = local.login_object_id
+    azuread_authentication_only = true
   }
 
   identity {
@@ -77,6 +77,7 @@ resource "azurerm_mssql_elasticpool" "pool_mt_demo" {
     name     = "GP_Gen5"
     capacity = 2
     tier     = "GeneralPurpose"
+    family   = "Gen5"
   }
 
   per_database_settings {
@@ -88,7 +89,7 @@ resource "azurerm_mssql_elasticpool" "pool_mt_demo" {
 resource "azurerm_mssql_database" "tenant_databases_mt_demo" {
   for_each = local.tenant_databases
 
-  name            = each.value.db_name
+  name            = each.key
   server_id       = azurerm_mssql_server.sql_server_mt_demo.id
   elastic_pool_id = azurerm_mssql_elasticpool.pool_mt_demo.id
   max_size_gb     = each.value.db_max_size_gb
@@ -97,7 +98,7 @@ resource "azurerm_mssql_database" "tenant_databases_mt_demo" {
 
 resource "azurerm_storage_account" "artifact_storage_mt_demo" {
   name                     = "artifactstoragemtdemo"
-  resource_group_name      = azurerm_resource_group.sql_server_mt_demo.name
+  resource_group_name      = azurerm_resource_group.rg_mt_demo.name
   location                 = local.location
   account_tier             = "Standard"
   account_kind             = "StorageV2"
