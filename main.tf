@@ -59,6 +59,13 @@ resource "azurerm_mssql_server" "sql_server_mt_demo" {
   }
 }
 
+resource "azurerm_mssql_firewall_rule" "example" {
+  name             = "WideOpen"
+  server_id        = azurerm_mssql_server.sql_server_mt_demo.id
+  start_ip_address = "0.0.0.0"
+  end_ip_address   = "254.254.254.254"
+}
+
 resource "azurerm_mssql_database" "mgmt_db_mt_demo" {
   name         = "mgmt-db-mt-demo"
   server_id    = azurerm_mssql_server.sql_server_mt_demo.id

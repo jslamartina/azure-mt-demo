@@ -3,6 +3,8 @@
 # Ensure the | (pipe) operation does not cover up any underlying errors by returning the same error code as its underlying processes
 set -o pipefail
 
+export RESULT=0
+
 export subscription_id="00000000-0000-0000-0000-000000000000"
 export rg_name="rg-mt-demo"
 export server_name="sql-server-mt-demo"
@@ -10,14 +12,12 @@ export pool_name="pool-mt-demo"
 export mgmt_db_name="mgmt-db-mt-demo"
 export mgmt_db_script_path="mgmt-db"
 export tenant_db_script_path="tenant-db"
-export storage_account_name="artifactstoragemtdemo"
+export artifact_storage_account_name="artifactstoragemtdemo"
 export artifact_storage_container_name="mt-demo-artifact"
 export repo_name="azure-mt-demo"
+export repo_owner="jslamartina"
 
-sudo apt-get install zip
-sudo apt-get install unzip
-
-git clone -b main https://github.com/jslamartina/azure-mt-demo.git
+git clone -b main "https://github.com/${repo_owner}/${repo_name}.git"
 cd azure-mt-demo
 export commit_sha=$(git rev-parse --short HEAD)
 if [ -z "${commit_sha}" ]; then
@@ -130,7 +130,10 @@ for PID in $PIDS; do
     wait $PID || let "RESULT=1"
 done
 PIDS=""
-echo -e "\nAll test migrations applied successfully!"
+
+if [ $RESULT != 1 ]; then
+    echo -e "\nAll test migrations applied successfully!"
+fi
 
 # Finally, delete all of the DBs
 (
