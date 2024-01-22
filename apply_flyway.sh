@@ -1,7 +1,7 @@
 # Ensure the | (pipe) operation does not cover up any underlying errors by returning the same error code as its underlying processes
 set -o pipefail
 
-export commit_sha="SET THIS TO COMMIT SHA OUTPUT FROM TEST"
+export commit_sha="SET THIS TO COMMIT SHA OUTPUT FROM test_flyway_with_backups.sh"
 
 export subscription_id="00000000-0000-0000-0000-000000000000"
 export rg_name="rg-mt-demo"
