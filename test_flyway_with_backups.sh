@@ -3,6 +3,7 @@
 # Ensure the | (pipe) operation does not cover up any underlying errors by returning the same error code as its underlying processes
 set -o pipefail
 
+export subscription_id="00000000-0000-0000-0000-000000000000"
 export rg_name="rg-mt-demo"
 export server_name="sql-server-mt-demo"
 export pool_name="pool-mt-demo"
@@ -30,7 +31,7 @@ cd flyway
 # Log into Azure and set the current subscription. Subscription ID can be located in the URL when viewing your SQL Server in the Azure Portal.
 az login
 az account set \
-  --subscription "<INSERT YOUR SUBSCRIPTION ID HERE>"
+  --subscription $subscription_id
 
 # Dynamically query for a list of Tenant Databases. Send this JSON to map this to a list of names of the Tenant Databases
 # We can then loop through this list and apply the scripts in the tenant-db folder
